@@ -1,0 +1,45 @@
+<Window x:Class="WPFCore.App.Shell.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:WPFCore.App.Shell"
+             mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:ShellViewModel}"
+        Title="{Binding WindowTitle}"
+        Height="720" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Khách hàng"
+                          Command="{Binding NavigateCommand}"
+                          CommandParameter="{Binding MenuItems[0]}" />
+                <Separator />
+                <MenuItem Header="E_xit" Click="ExitMenuItem_Click" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Giới thiệu"
+                          Command="{Binding NavigateCommand}"
+                          CommandParameter="{Binding MenuItems[1].Children[0]}" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Navigation host (ContentControl được thay bằng Frame trong code-behind) -->
+        <ContentControl Grid.Row="1" x:Name="NavigationHost" />
+
+        <!-- Status bar -->
+        <Border Grid.Row="2" Background="#FFF0F0F0" BorderBrush="#FFE0E0E0" BorderThickness="0,1,0,0" Padding="12,4">
+            <TextBlock Text="Sẵn sàng" FontSize="12" Foreground="#FF606060" />
+        </Border>
+    </Grid>
+</Window>

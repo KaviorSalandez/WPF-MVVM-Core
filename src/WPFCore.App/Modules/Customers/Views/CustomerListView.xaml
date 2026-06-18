@@ -1,0 +1,67 @@
+<UserControl x:Class="WPFCore.App.Modules.Customers.Views.CustomerListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:WPFCore.App.Modules.Customers.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:CustomerListViewModel}"
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+        <!-- Toolbar -->
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Thêm" Command="{Binding AddCommand}" Margin="0,0,4,0" Padding="12,4" MinWidth="80" />
+            <Button Grid.Column="1" Content="Sửa" Command="{Binding EditCommand}" Margin="4,0" Padding="12,4" MinWidth="80" />
+            <Button Grid.Column="2" Content="Xóa" Command="{Binding DeleteCommand}" Margin="4,0,0,0" Padding="12,4" MinWidth="80" />
+            <syncfusion:SfTextBoxExt Grid.Column="4" Width="240"
+                                      Watermark="Tìm kiếm theo mã, tên, email..."
+                                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
+
+        <!-- DataGrid -->
+        <syncfusion:SfDataGrid Grid.Row="2"
+                               x:Name="CustomersGrid"
+                               ItemsSource="{Binding Customers}"
+                               SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
+                               AutoGenerateColumns="False"
+                               AllowResizingColumns="True"
+                               AllowSorting="True"
+                               AllowFiltering="True"
+                               ShowRowHeader="False">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridNumericColumn HeaderText="Id" MappingName="Id" Width="60" />
+                <syncfusion:GridTextColumn HeaderText="Mã" MappingName="Code" Width="100" />
+                <syncfusion:GridTextColumn HeaderText="Tên khách hàng" MappingName="Name" Width="200" />
+                <syncfusion:GridTextColumn HeaderText="Email" MappingName="Email" Width="200" />
+                <syncfusion:GridTextColumn HeaderText="Số điện thoại" MappingName="Phone" Width="120" />
+                <syncfusion:GridTextColumn HeaderText="Địa chỉ" MappingName="Address" Width="200" />
+                <syncfusion:GridTextColumn HeaderText="Ngày sinh" MappingName="DateOfBirth"
+                                           DisplayBinding="{Binding DateOfBirth, StringFormat='dd/MM/yyyy'}" Width="100" />
+                <syncfusion:GridTextColumn HeaderText="Ngày tạo" MappingName="CreatedAt"
+                                           DisplayBinding="{Binding CreatedAt, StringFormat='dd/MM/yyyy HH:mm'}" Width="130" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+
+        <!-- Busy indicator — IsHitTestVisible bound to IsBusy to prevent overlay from blocking DataGrid clicks when not loading -->
+        <syncfusion:SfBusyIndicator Grid.Row="2" IsBusy="{Binding IsBusy}" IsHitTestVisible="{Binding IsBusy}" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,49 @@
+# Build outputs
+bin/
+obj/
+out/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.tmp
+
+# User-specific config (contains secrets / Syncfusion license)
+appsettings.*.local.json
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
+
+# Test artifacts
+TestResults/
+coverage/
+*.coverage
+.cobertura.xml
+*.trx
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Publish output
+publish/
+artifacts/
+*.md
