@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Title -->
@@ -40,15 +41,15 @@
         <!-- DataGrid -->
         <syncfusion:SfDataGrid Grid.Row="2"
                                x:Name="CustomersGrid"
-                               ItemsSource="{Binding Customers}"
+                               ItemsSource="{Binding PagedSource, ElementName=DataPager}"
                                SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
                                AutoGenerateColumns="False"
                                AllowResizingColumns="True"
                                AllowSorting="True"
-                               AllowFiltering="True"
+                               AllowFiltering="False"
                                ShowRowHeader="False">
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridNumericColumn HeaderText="Id" MappingName="Id" Width="60" />
+                <syncfusion:GridNumericColumn HeaderText="STT" MappingName="Stt" Width="50" TextAlignment="Center" NumberDecimalDigits="0" />
                 <syncfusion:GridTextColumn HeaderText="Mã" MappingName="Code" Width="100" />
                 <syncfusion:GridTextColumn HeaderText="Tên khách hàng" MappingName="Name" Width="200" />
                 <syncfusion:GridTextColumn HeaderText="Email" MappingName="Email" Width="200" />
@@ -61,7 +62,37 @@
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
 
-        <!-- Busy indicator — IsHitTestVisible bound to IsBusy to prevent overlay from blocking DataGrid clicks when not loading -->
+        <!-- Busy indicator -->
         <syncfusion:SfBusyIndicator Grid.Row="2" IsBusy="{Binding IsBusy}" IsHitTestVisible="{Binding IsBusy}" />
+
+        <!-- Pager Bar -->
+        <Grid Grid.Row="3" Margin="0,4,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Data Pager -->
+            <syncfusion:SfDataPager Grid.Column="0"
+                                    x:Name="DataPager"
+                                    Source="{Binding Customers}"
+                                    PageSize="{Binding PageSize}"
+                                    NumericButtonCount="5"
+                                    AutoEllipsisMode="After"
+                                    UseOnDemandPaging="False" />
+
+            <!-- Page Size Selector -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                <TextBlock Text="Số dòng/trang:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox Width="70"
+                          SelectedValue="{Binding PageSize, Mode=TwoWay}"
+                          SelectedValuePath="Content">
+                    <ComboBoxItem Content="10" />
+                    <ComboBoxItem Content="20" IsSelected="True" />
+                    <ComboBoxItem Content="50" />
+                    <ComboBoxItem Content="100" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

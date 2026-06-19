@@ -1,16 +1,17 @@
 <Window x:Class="WPFCore.App.Shell.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:WPFCore.App.Shell"
-             mc:Ignorable="d"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFCore.App.Shell"
+        mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:ShellViewModel}"
         Title="{Binding WindowTitle}"
         Height="720" Width="1200"
         WindowStartupLocation="CenterScreen"
         FontFamily="Segoe UI">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -18,19 +19,65 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Menu Bar -->
+        <!-- ── Menu Bar ─────────────────────────────────────────────────── -->
         <Menu Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Khách hàng"
-                          Command="{Binding NavigateCommand}"
-                          CommandParameter="{Binding MenuItems[0]}" />
-                <Separator />
-                <MenuItem Header="E_xit" Click="ExitMenuItem_Click" />
+
+            <!-- THỐNG KÊ -->
+            <MenuItem Header="Thống kê"
+                      Command="{Binding ActionCommand}"
+                      CommandParameter="Dashboard" />
+
+            <!-- DANH MỤC -->
+            <MenuItem Header="Danh mục">
+                <MenuItem Header="Quản lý lớp dữ liệu bản đồ"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="MapLayer" />
+                <MenuItem Header="Quản lý đối tượng địa lý"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="GeoFeature" />
+                <MenuItem Header="Quản lý nguồn dữ liệu"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="DataSource" />
+                <MenuItem Header="Quản lý quy định kiểm tra"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="CheckRules" />
+                <MenuItem Header="Quản lý loại bản đồ"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="MapType" />
+                <MenuItem Header="Quản lý người dùng"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="Users" />
             </MenuItem>
-            <MenuItem Header="_Help">
-                <MenuItem Header="_Giới thiệu"
-                          Command="{Binding NavigateCommand}"
-                          CommandParameter="{Binding MenuItems[1].Children[0]}" />
+
+            <!-- HỆ THỐNG -->
+            <MenuItem Header="Hệ thống">
+                <MenuItem Header="Kiểm tra dữ liệu bản đồ"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="RunCheck" />
+                <MenuItem Header="Xem kết quả kiểm tra"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="CheckResults" />
+                <MenuItem Header="Báo cáo tổng hợp"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="SummaryReport" />
+                <MenuItem Header="Xuất báo cáo (Excel/PDF)"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="ExportReport" />
+                <Separator />
+                <MenuItem Header="Quản lý khách hàng (CRUD mẫu)"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="CustomerList" />
+            </MenuItem>
+
+            <!-- TRỢ GIÚP -->
+            <MenuItem Header="Trợ giúp">
+                <MenuItem Header="Giới thiệu"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="About" />
+                <Separator />
+                <MenuItem Header="Thoát"
+                          Command="{Binding ActionCommand}"
+                          CommandParameter="Exit" />
             </MenuItem>
         </Menu>
 

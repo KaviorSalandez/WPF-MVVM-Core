@@ -15,9 +15,10 @@ public partial class MainWindow : Window
 {
     private readonly FrameNavigationService _navigation;
 
-    public MainWindow(FrameNavigationService navigation)
+    public MainWindow(FrameNavigationService navigation, ShellViewModel viewModel)
     {
         InitializeComponent();
+        DataContext = viewModel;
         _navigation = navigation;
 
         // ContentControl trong XAML được thay bằng Frame để INavigationService điều khiển.
@@ -28,10 +29,5 @@ public partial class MainWindow : Window
         NavigationHost.Content = frame;
 
         _navigation.Attach(frame);
-    }
-
-    private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        Application.Current.Shutdown();
     }
 }

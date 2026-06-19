@@ -13,7 +13,7 @@ using WPFCore.App.Modules.Customers.Services;
 
 namespace WPFCore.App.Modules.Customers.ViewModels;
 
-public sealed partial class CustomerEditViewModel : ViewModelBase, INotifyDataErrorInfo
+public sealed partial class CustomerEditViewModel : ViewModelBase, INotifyDataErrorInfo, IDialogAware
 {
     private readonly ICustomerService _service;
     private readonly IValidator<Customer> _validator;
@@ -48,6 +48,10 @@ public sealed partial class CustomerEditViewModel : ViewModelBase, INotifyDataEr
     public bool HasErrors => _errors.Count > 0;
 
     public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+    // IDialogAware implementation
+    public string? DialogTitle => Title;
+    public event Action<bool?>? RequestClose;
 
     public CustomerEditViewModel(
         ICustomerService service,
@@ -129,7 +133,7 @@ public sealed partial class CustomerEditViewModel : ViewModelBase, INotifyDataEr
             IsBusy = true;
             await _service.SaveAsync(customer, cancellationToken).ConfigureAwait(true);
             _logger.LogInformation("Customer saved: {Code}", customer.Code);
-            _navigation.NavigateBack();
+            CloseOrNavigateBack(true);
         }
         catch (ValidationException vex)
         {
@@ -158,7 +162,23 @@ public sealed partial class CustomerEditViewModel : ViewModelBase, INotifyDataEr
     [RelayCommand]
     private void Cancel()
     {
-        _navigation.NavigateBack();
+        CloseOrNavigateBack(false);
+    }
+
+    /// <summary>
+    /// Nếu đang ở trong dialog → fire RequestClose để đóng popup.
+    /// Nếu đang ở dạng page navigation → fallback về NavigateBack.
+    /// </summary>
+    private void CloseOrNavigateBack(bool? dialogResult)
+    {
+        if (RequestClose is not null)
+        {
+            RequestClose.Invoke(dialogResult);
+        }
+        else
+        {
+            _navigation.NavigateBack();
+        }
     }
 
     private bool CanSave() => !HasErrors

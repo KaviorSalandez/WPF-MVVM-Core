@@ -28,7 +28,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     private object? _currentView;
 
     /// <summary>Danh sách menu tĩnh hiển thị trên thanh menu của MainWindow.</summary>
-    public IReadOnlyList<MenuItemDefinition> MenuItems { get; } = MenuDefinitions.MainMenu;
+    public MenuItemDefinition[] MenuItems { get; } = MenuDefinitions.MainMenu;
 
     public ShellViewModel(
         INavigationService navigation,
@@ -70,14 +70,52 @@ public sealed partial class ShellViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
+    private void Action(string actionKey)
+    {
+        if (actionKey == "CustomerList")
+        {
+            _navigation.NavigateTo(typeof(WPFCore.App.Modules.Customers.ViewModels.CustomerListViewModel));
+            return;
+        }
+        else if (actionKey == "Dashboard")
+        {
+            _navigation.NavigateTo(typeof(WPFCore.App.Modules.Dashboard.ViewModels.DashboardViewModel));
+            return;
+        }
+        
+        HandleAction(actionKey);
+    }
+
     private void HandleAction(string actionKey)
     {
         switch (actionKey)
         {
+            // ── Danh mục ──────────────────────────────────────────────
+            case "MapLayer":
+            case "GeoFeature":
+            case "DataSource":
+            case "CheckRules":
+            case "MapType":
+            case "Users":
+                _ = _dialog.ShowMessageAsync("Thông báo",
+                    $"Chức năng \"{actionKey}\" đang được phát triển.");
+                break;
+
+            // ── Hệ thống ──────────────────────────────────────────────
+            case "RunCheck":
+            case "CheckResults":
+            case "SummaryReport":
+            case "ExportReport":
+                _ = _dialog.ShowMessageAsync("Thông báo",
+                    $"Chức năng \"{actionKey}\" đang được phát triển.");
+                break;
+
+            // ── Trợ giúp ──────────────────────────────────────────────
             case "About":
                 _ = _dialog.ShowMessageAsync(
                     "Giới thiệu",
-                    "WPFCore Desktop Boilerplate\n.NET 6 + Syncfusion WPF + CommunityToolkit.Mvvm\n\n© 2026 WPFCore Team");
+                    "Hệ thống Kiểm tra Dữ liệu Bản đồ\n.NET 6 + Syncfusion WPF + CommunityToolkit.Mvvm\n\n© 2026");
                 break;
             case "Exit":
                 Application.Current.Shutdown();

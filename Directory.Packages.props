@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageVersion Include="Syncfusion.SfGrid.WPF" Version="24.2.7" />
     <PackageVersion Include="Syncfusion.SfInput.WPF" Version="24.2.7" />
+    <PackageVersion Include="Syncfusion.Themes.FluentDark.WPF" Version="24.2.7" />
     <PackageVersion Include="Syncfusion.Themes.FluentLight.WPF" Version="24.2.7" />
     <PackageVersion Include="Syncfusion.Themes.Windows11Light.WPF" Version="24.2.7" />
     <PackageVersion Include="Syncfusion.SfSkinManager.WPF" Version="24.2.7" />

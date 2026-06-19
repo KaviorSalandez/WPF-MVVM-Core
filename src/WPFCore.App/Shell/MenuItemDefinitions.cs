@@ -1,3 +1,6 @@
+using WPFCore.App.Modules.Customers.ViewModels;
+using WPFCore.App.Modules.Dashboard.ViewModels;
+
 namespace WPFCore.App.Shell;
 
 /// <summary>
@@ -18,21 +21,44 @@ public sealed record MenuItemDefinition(
     string? ActionKey = null);
 
 /// <summary>
-/// Cấu hình menu tĩnh cho Shell. Khi module mới được thêm, chỉ cần bổ sung
-/// <see cref="MenuItemDefinition"/> tương ứng vào <see cref="MainMenu"/>.
+/// Cấu hình menu tĩnh cho Shell hệ thống Kiểm tra Dữ liệu Bản đồ.
+/// Khi module mới được thêm, chỉ cần bổ sung <see cref="MenuItemDefinition"/> tương ứng vào <see cref="MainMenu"/>.
 /// </summary>
 public static class MenuDefinitions
 {
-    public static IReadOnlyList<MenuItemDefinition> MainMenu { get; } = new[]
+    public static MenuItemDefinition[] MainMenu { get; } = new[]
     {
-        new MenuItemDefinition(
-            "Khách hàng",
-            NavigateToViewModel: Type.GetType("WPFCore.App.Modules.Customers.ViewModels.CustomerListViewModel, WPFCore.App")
-                ?? throw new InvalidOperationException("CustomerListViewModel type không tìm được")),
+        // ── THỐNG KÊ ─────────────────────────────────────────────────────────
+        new MenuItemDefinition("Thống kê", NavigateToViewModel: typeof(DashboardViewModel)),
+
+        // ── DANH MỤC ──────────────────────────────────────────────────────────
+        new MenuItemDefinition("Danh mục", Children: new[]
+        {
+            new MenuItemDefinition("Quản lý lớp dữ liệu bản đồ",   ActionKey: "MapLayer"),
+            new MenuItemDefinition("Quản lý đối tượng địa lý",      ActionKey: "GeoFeature"),
+            new MenuItemDefinition("Quản lý nguồn dữ liệu",         ActionKey: "DataSource"),
+            new MenuItemDefinition("Quản lý quy định kiểm tra",     ActionKey: "CheckRules"),
+            new MenuItemDefinition("Quản lý loại bản đồ",           ActionKey: "MapType"),
+            new MenuItemDefinition("Quản lý người dùng",            ActionKey: "Users"),
+        }),
+
+        // ── HỆ THỐNG ──────────────────────────────────────────────────────────
+        new MenuItemDefinition("Hệ thống", Children: new[]
+        {
+            new MenuItemDefinition("Kiểm tra dữ liệu bản đồ",  ActionKey: "RunCheck"),
+            new MenuItemDefinition("Xem kết quả kiểm tra",     ActionKey: "CheckResults"),
+            new MenuItemDefinition("Báo cáo tổng hợp",         ActionKey: "SummaryReport"),
+            new MenuItemDefinition("Xuất báo cáo (Excel/PDF)", ActionKey: "ExportReport"),
+            new MenuItemDefinition("---"),   // separator placeholder
+            new MenuItemDefinition("Quản lý khách hàng (CRUD mẫu)",
+                NavigateToViewModel: typeof(CustomerListViewModel)),
+        }),
+
+        // ── TRỢ GIÚP ──────────────────────────────────────────────────────────
         new MenuItemDefinition("Trợ giúp", Children: new[]
         {
             new MenuItemDefinition("Giới thiệu", ActionKey: "About"),
-            new MenuItemDefinition("Thoát", ActionKey: "Exit"),
+            new MenuItemDefinition("Thoát",      ActionKey: "Exit"),
         }),
     };
 }

@@ -30,6 +30,7 @@
   <ItemGroup>
     <PackageReference Include="Syncfusion.SfGrid.WPF" />
     <PackageReference Include="Syncfusion.SfInput.WPF" />
+    <PackageReference Include="Syncfusion.Themes.FluentDark.WPF" />
     <PackageReference Include="Syncfusion.Themes.FluentLight.WPF" />
     <PackageReference Include="Syncfusion.Themes.Windows11Light.WPF" />
     <PackageReference Include="Syncfusion.SfSkinManager.WPF" />
@@ -57,6 +58,12 @@
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Riok.Mapperly" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="wpfcore.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,7 @@
+using System;
 using System.Windows;
 using Microsoft.Extensions.Options;
 using Syncfusion.SfSkinManager;
-using Syncfusion.Themes.FluentLight.WPF;
-using Syncfusion.Themes.Windows11Light.WPF;
 using WPFCore.App.Configuration;
 
 namespace WPFCore.App.Shared.Themes;

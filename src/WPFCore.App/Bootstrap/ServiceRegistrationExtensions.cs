@@ -9,6 +9,7 @@ using Riok.Mapperly.Abstractions;
 using WPFCore.App.Configuration;
 using WPFCore.App.Data;
 using WPFCore.App.Modules.Customers;
+using WPFCore.App.Modules.Dashboard;
 using WPFCore.App.Shell;
 using WPFCore.App.Shared.Dialogs;
 using WPFCore.App.Shared.Navigation;
@@ -90,6 +91,7 @@ public static class ServiceRegistrationExtensions
 
         // Domain modules
         services.AddCustomersModule();
+        services.AddDashboardModule();
 
         // Shell (MainWindow, NavigationView)
         services.AddShell();

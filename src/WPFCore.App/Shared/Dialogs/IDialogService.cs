@@ -14,4 +14,11 @@ public interface IDialogService
 
     /// <summary>Hiển thị lỗi (icon Error). Có thể truyền kèm <see cref="Exception"/> để hiện stack trace.</summary>
     Task ShowErrorAsync(string title, string message, Exception? exception = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Hiển thị ViewModel dưới dạng dialog popup modal.
+    /// Trả về <c>true</c> nếu dialog kết thúc thành công (vd: user bấm Lưu),
+    /// <c>false</c>/<c>null</c> nếu hủy bỏ.
+    /// </summary>
+    Task<bool?> ShowDialogAsync<TViewModel>(object? parameter = null) where TViewModel : class;
 }

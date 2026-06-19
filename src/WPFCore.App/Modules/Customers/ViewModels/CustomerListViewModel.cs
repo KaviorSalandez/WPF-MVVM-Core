@@ -27,6 +27,9 @@ public sealed partial class CustomerListViewModel : ViewModelBase
     [ObservableProperty]
     private CustomerDto? _selectedCustomer;
 
+    [ObservableProperty]
+    private int _pageSize = 20;
+
     public ObservableCollection<CustomerDto> Customers { get; } = new();
 
     public CustomerListViewModel(
@@ -52,9 +55,11 @@ public sealed partial class CustomerListViewModel : ViewModelBase
             IsBusy = true;
             var data = await _service.GetAllAsync(SearchText, cancellationToken).ConfigureAwait(true);
             Customers.Clear();
+            int stt = 1;
             foreach (var c in data)
             {
-                Customers.Add(_mapper.ToDto(c));
+                var dto = _mapper.ToDto(c) with { Stt = stt++ };
+                Customers.Add(dto);
             }
             _logger.LogInformation("Loaded {Count} customers", Customers.Count);
         }
@@ -70,16 +75,24 @@ public sealed partial class CustomerListViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Add()
+    private async Task AddAsync(CancellationToken cancellationToken)
     {
-        _navigation.NavigateTo<CustomerEditViewModel>(new CustomerEditParameter(null));
+        var result = await _dialog.ShowDialogAsync<CustomerEditViewModel>(new CustomerEditParameter(null)).ConfigureAwait(true);
+        if (result == true)
+        {
+            await LoadAsync(cancellationToken).ConfigureAwait(true);
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanEditOrDelete))]
-    private void Edit()
+    private async Task EditAsync(CancellationToken cancellationToken)
     {
         if (SelectedCustomer is null) return;
-        _navigation.NavigateTo<CustomerEditViewModel>(new CustomerEditParameter(SelectedCustomer.Id));
+        var result = await _dialog.ShowDialogAsync<CustomerEditViewModel>(new CustomerEditParameter(SelectedCustomer.Id)).ConfigureAwait(true);
+        if (result == true)
+        {
+            await LoadAsync(cancellationToken).ConfigureAwait(true);
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanEditOrDelete))]

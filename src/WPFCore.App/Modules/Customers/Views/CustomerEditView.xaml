@@ -33,7 +33,7 @@
                 <TextBlock Grid.Column="0" Text="Mã khách hàng" VerticalAlignment="Center" />
                 <syncfusion:SfTextBoxExt Grid.Column="1"
                                           Text="{Binding Code, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
-                                          MaxLength="10" CharacterCasing="Upper" />
+                                          MaxLength="10" CharacterCasing="Upper" MinHeight="36" VerticalContentAlignment="Center"/>
             </Grid>
 
             <Grid Margin="0,4">
@@ -43,7 +43,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Tên khách hàng *" VerticalAlignment="Center" />
                 <syncfusion:SfTextBoxExt Grid.Column="1"
-                                          Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" />
+                                          Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" MinHeight="36" VerticalContentAlignment="Center"/>
             </Grid>
 
             <Grid Margin="0,4">
@@ -53,7 +53,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Email" VerticalAlignment="Center" />
                 <syncfusion:SfTextBoxExt Grid.Column="1"
-                                          Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" />
+                                          Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" MinHeight="36" VerticalContentAlignment="Center"/>
             </Grid>
 
             <Grid Margin="0,4">
@@ -63,7 +63,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Số điện thoại" VerticalAlignment="Center" />
                 <syncfusion:SfTextBoxExt Grid.Column="1"
-                                          Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" />
+                                          Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" MinHeight="36" VerticalContentAlignment="Center"/>
             </Grid>
 
             <Grid Margin="0,4">
@@ -74,7 +74,7 @@
                 <TextBlock Grid.Column="0" Text="Địa chỉ" VerticalAlignment="Center" />
                 <syncfusion:SfTextBoxExt Grid.Column="1"
                                           Text="{Binding Address, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
-                                          TextWrapping="Wrap" AcceptsReturn="True" Height="60" VerticalScrollBarVisibility="Auto" />
+                                          TextWrapping="Wrap" AcceptsReturn="True" Height="60" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center"/>
             </Grid>
 
             <Grid Margin="0,4">
@@ -83,7 +83,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Ngày sinh" VerticalAlignment="Center" />
-                <DatePicker Grid.Column="1" SelectedDate="{Binding DateOfBirth, Converter={StaticResource DateOnlyToDateTimeConverter}}" />
+                <DatePicker Grid.Column="1" SelectedDate="{Binding DateOfBirth, Converter={StaticResource DateOnlyToDateTimeConverter}}" MinHeight="36" VerticalContentAlignment="Center"/>
             </Grid>
         </StackPanel>
 

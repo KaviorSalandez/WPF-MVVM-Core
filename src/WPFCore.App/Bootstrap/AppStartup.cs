@@ -237,12 +237,12 @@ public sealed class AppStartup
 
     private void NavigateToDefault()
     {
-        // Try resolve CustomerListViewModel reflectively (Customer module có thể chưa có)
-        var viewModelType = Type.GetType(CustomerListViewModelTypeName, throwOnError: false);
+        // Navigate to DashboardViewModel as the default screen
+        var viewModelType = Type.GetType("WPFCore.App.Modules.Dashboard.ViewModels.DashboardViewModel, WPFCore.App", throwOnError: false);
         if (viewModelType is null)
         {
             _logger.LogInformation(
-                "CustomerListViewModel chưa được đăng ký. Skip default navigation. " +
+                "DashboardViewModel chưa được đăng ký. Skip default navigation. " +
                 "App sẽ hiển thị MainWindow trống.");
             return;
         }
