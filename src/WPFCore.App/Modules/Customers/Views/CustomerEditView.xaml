@@ -26,55 +26,140 @@
 
         <StackPanel Grid.Row="2" Orientation="Vertical">
             <Grid Margin="0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Mã khách hàng" VerticalAlignment="Center" />
-                <syncfusion:SfTextBoxExt Grid.Column="1"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Mã khách hàng" VerticalAlignment="Center" />
+                <syncfusion:SfTextBoxExt Grid.Row="0" Grid.Column="1" x:Name="CodeInput" Validation.ErrorTemplate="{x:Null}"
                                           Text="{Binding Code, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
                                           MaxLength="10" CharacterCasing="Upper" MinHeight="36" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Foreground="Red" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"
+                           Text="{Binding ElementName=CodeInput, Path=(Validation.Errors)[0].ErrorContent}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=CodeInput, Path=(Validation.HasError)}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
 
             <Grid Margin="0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Tên khách hàng *" VerticalAlignment="Center" />
-                <syncfusion:SfTextBoxExt Grid.Column="1"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Tên khách hàng *" VerticalAlignment="Center" />
+                <syncfusion:SfTextBoxExt Grid.Row="0" Grid.Column="1" x:Name="NameInput" Validation.ErrorTemplate="{x:Null}"
                                           Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" MinHeight="36" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Foreground="Red" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"
+                           Text="{Binding ElementName=NameInput, Path=(Validation.Errors)[0].ErrorContent}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=NameInput, Path=(Validation.HasError)}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
 
             <Grid Margin="0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Email" VerticalAlignment="Center" />
-                <syncfusion:SfTextBoxExt Grid.Column="1"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Email" VerticalAlignment="Center" />
+                <syncfusion:SfTextBoxExt Grid.Row="0" Grid.Column="1" x:Name="EmailInput" Validation.ErrorTemplate="{x:Null}"
                                           Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" MinHeight="36" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Foreground="Red" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"
+                           Text="{Binding ElementName=EmailInput, Path=(Validation.Errors)[0].ErrorContent}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=EmailInput, Path=(Validation.HasError)}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
 
             <Grid Margin="0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Số điện thoại" VerticalAlignment="Center" />
-                <syncfusion:SfTextBoxExt Grid.Column="1"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Số điện thoại" VerticalAlignment="Center" />
+                <syncfusion:SfTextBoxExt Grid.Row="0" Grid.Column="1" x:Name="PhoneInput" Validation.ErrorTemplate="{x:Null}"
                                           Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" MinHeight="36" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Foreground="Red" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"
+                           Text="{Binding ElementName=PhoneInput, Path=(Validation.Errors)[0].ErrorContent}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=PhoneInput, Path=(Validation.HasError)}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
 
             <Grid Margin="0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Địa chỉ" VerticalAlignment="Center" />
-                <syncfusion:SfTextBoxExt Grid.Column="1"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Địa chỉ" VerticalAlignment="Center" />
+                <syncfusion:SfTextBoxExt Grid.Row="0" Grid.Column="1" x:Name="AddressInput" Validation.ErrorTemplate="{x:Null}"
                                           Text="{Binding Address, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
                                           TextWrapping="Wrap" AcceptsReturn="True" Height="60" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Foreground="Red" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"
+                           Text="{Binding ElementName=AddressInput, Path=(Validation.Errors)[0].ErrorContent}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=AddressInput, Path=(Validation.HasError)}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
 
             <Grid Margin="0,4">

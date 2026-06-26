@@ -185,17 +185,9 @@ public sealed partial class CustomerEditViewModel : ViewModelBase, INotifyDataEr
         && !string.IsNullOrWhiteSpace(Name)
         && !string.IsNullOrWhiteSpace(Code);
 
-    partial void OnCodeChanged(string value)
-    {
-        ValidateProperty(nameof(Code), value);
-        SaveCommand.NotifyCanExecuteChanged();
-    }
+    partial void OnCodeChanged(string value) => ValidateProperty(nameof(Code), value);
 
-    partial void OnNameChanged(string value)
-    {
-        ValidateProperty(nameof(Name), value);
-        SaveCommand.NotifyCanExecuteChanged();
-    }
+    partial void OnNameChanged(string value) => ValidateProperty(nameof(Name), value);
 
     partial void OnEmailChanged(string? value) => ValidateProperty(nameof(Email), value);
     partial void OnPhoneChanged(string? value) => ValidateProperty(nameof(Phone), value);
@@ -223,5 +215,6 @@ public sealed partial class CustomerEditViewModel : ViewModelBase, INotifyDataEr
 
         ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         OnPropertyChanged(nameof(HasErrors));
+        SaveCommand.NotifyCanExecuteChanged();
     }
 }
