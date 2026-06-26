@@ -15,33 +15,9 @@ public sealed class CustomerRepositoryTests
 {
     private SqliteConnection _connection = null!;
     private AppDbContext _dbContext = null!;
-    private TestConnectionFactory _connectionFactory = null!;
+
+
     private CustomerRepository _sut = null!;
-
-    /// <summary>
-    /// Trả về connection MỚI mở tới cùng shared in-memory database.
-    /// Dùng <c>Data Source=file::memory:?cache=shared</c> để nhiều connection
-    /// thấy cùng schema &amp; data (khi ít nhất 1 connection giữ mở).
-    /// </summary>
-    private sealed class TestConnectionFactory : IDbConnectionFactory
-    {
-        private readonly DbConnection _shared;
-
-        public TestConnectionFactory(DbConnection shared)
-        {
-            _shared = shared;
-            ConnectionString = _shared.ConnectionString;
-        }
-
-        public string ConnectionString { get; }
-
-        public async Task<DbConnection> CreateOpenConnectionAsync(CancellationToken cancellationToken = default)
-        {
-            var c = new SqliteConnection(_shared.ConnectionString);
-            await c.OpenAsync(cancellationToken).ConfigureAwait(false);
-            return c;
-        }
-    }
 
     [SetUp]
     public async Task SetUp()
@@ -57,8 +33,7 @@ public sealed class CustomerRepositoryTests
         _dbContext = new AppDbContext(options);
         await _dbContext.Database.EnsureCreatedAsync();
 
-        _connectionFactory = new TestConnectionFactory(_connection);
-        _sut = new CustomerRepository(_connectionFactory, NullLogger<CustomerRepository>.Instance);
+        _sut = new CustomerRepository(_dbContext, NullLogger<CustomerRepository>.Instance);
 
         // Clean state — wipe all rows inserted by previous tests in this assembly
         // (in-memory shared DB persists across [SetUp]/[TearDown] within same AppDomain).
