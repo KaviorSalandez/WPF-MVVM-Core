@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using WPFCore.App.Modules.Customers.Models;
+using WPFCore.App.Modules.Menus.Models;
 
 namespace WPFCore.App.Data;
 
@@ -12,6 +14,9 @@ public sealed class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
+
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<MenuItemEntity> MenuItems => Set<MenuItemEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

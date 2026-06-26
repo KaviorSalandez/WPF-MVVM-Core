@@ -7,7 +7,8 @@ using Microsoft.Extensions.Logging;
 using WPFCore.App.Shared.Dialogs;
 using WPFCore.App.Shared.Navigation;
 using WPFCore.App.Shared.ViewModels;
-using WPFCore.App.Shell.Menu;
+using WPFCore.App.Modules.Menus.Models;
+using WPFCore.App.Modules.Menus.Services;
 
 namespace WPFCore.App.Shell;
 
@@ -34,6 +35,13 @@ public sealed partial class ShellViewModel : ViewModelBase
     /// Là <see cref="ObservableCollection{T}"/> nên UI tự cập nhật sau khi nạp xong.
     /// </summary>
     public ObservableCollection<MenuNode> MenuItems { get; } = new();
+
+    /// <summary>
+    /// Danh sách các node breadcrumb hiện tại để bind lên UI.
+    /// </summary>
+    public ObservableCollection<BreadcrumbItem> Breadcrumbs { get; } = new();
+
+    private List<string> _currentMenuPath = new();
 
     public ShellViewModel(
         INavigationService navigation,
@@ -96,12 +104,48 @@ public sealed partial class ShellViewModel : ViewModelBase
             return;
         }
 
+        // Tìm đường dẫn menu (ví dụ: ["Hệ thống", "Quản lý khách hàng"])
+        var path = FindNodePath(MenuItems, node, new List<string>());
+        if (path != null && path.Count > 0)
+        {
+            // Bỏ phần tử cuối (mục lá) vì View/ViewModel sẽ tự có Title riêng
+            _currentMenuPath = path.Take(path.Count - 1).ToList();
+        }
+        else
+        {
+            _currentMenuPath.Clear();
+        }
+
         Dispatch(node.ActionKey);
+    }
+
+    private List<string>? FindNodePath(IEnumerable<MenuNode> nodes, MenuNode target, List<string> currentPath)
+    {
+        foreach (var node in nodes)
+        {
+            var newPath = new List<string>(currentPath) { node.Title };
+            if (node == target)
+            {
+                return newPath;
+            }
+            if (node.HasChildren)
+            {
+                var result = FindNodePath(node.Children, target, newPath);
+                if (result != null) return result;
+            }
+        }
+        return null;
     }
 
     /// <summary>Phân luồng theo <c>ActionKey</c>: điều hướng tới ViewModel hoặc thực thi hành động.</summary>
     private void Dispatch(string actionKey)
     {
+        // Khi user click menu chính, reset lại lịch sử điều hướng để bắt đầu breadcrumb mới.
+        if (actionKey == "CustomerList" || actionKey == "Dashboard" || actionKey == "Menus")
+        {
+            _navigation.ClearHistory();
+        }
+
         switch (actionKey)
         {
             // ── Điều hướng tới các màn hình đã có ──────────────────────
@@ -110,6 +154,9 @@ public sealed partial class ShellViewModel : ViewModelBase
                 break;
             case "Dashboard":
                 _navigation.NavigateTo(typeof(WPFCore.App.Modules.Dashboard.ViewModels.DashboardViewModel));
+                break;
+            case "Menus":
+                _navigation.NavigateTo(typeof(WPFCore.App.Modules.Menus.ViewModels.MenuListViewModel));
                 break;
 
             // ── Trợ giúp ───────────────────────────────────────────────
@@ -136,6 +183,50 @@ public sealed partial class ShellViewModel : ViewModelBase
         if (e.ViewModel is ViewModelBase vm)
         {
             WindowTitle = $"WPFCore — {vm.Title ?? "Trang"}";
+        }
+        UpdateBreadcrumbs();
+    }
+
+    private void UpdateBreadcrumbs()
+    {
+        Breadcrumbs.Clear();
+
+        // 1. Thêm các menu cha (ví dụ: "Hệ thống")
+        foreach (var menuTitle in _currentMenuPath)
+        {
+            Breadcrumbs.Add(new BreadcrumbItem
+            {
+                Title = menuTitle,
+                ViewModel = null!, 
+                NavigateCommand = null! // Không cho click vào mục hệ thống
+            });
+        }
+
+        // 2. Thêm lịch sử điều hướng (từ FrameNavigationService)
+        foreach (var vmObj in _navigation.History)
+        {
+            if (vmObj is ViewModelBase vmBase)
+            {
+                Breadcrumbs.Add(new BreadcrumbItem
+                {
+                    Title = vmBase.Title ?? "Unknown",
+                    ViewModel = vmObj,
+                    NavigateCommand = new RelayCommand(() => NavigateToBreadcrumb(vmObj))
+                });
+            }
+        }
+    }
+
+    private void NavigateToBreadcrumb(object targetViewModel)
+    {
+        if (_navigation.CurrentViewModel == targetViewModel)
+        {
+            return;
+        }
+
+        while (_navigation.CanNavigateBack && _navigation.CurrentViewModel != targetViewModel)
+        {
+            _navigation.NavigateBack();
         }
     }
 }

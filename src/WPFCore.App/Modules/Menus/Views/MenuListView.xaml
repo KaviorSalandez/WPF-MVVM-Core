@@ -1,0 +1,58 @@
+<UserControl x:Class="WPFCore.App.Modules.Menus.Views.MenuListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:WPFCore.App.Modules.Menus.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:MenuListViewModel}"
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+        <!-- Toolbar -->
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Thêm" Command="{Binding AddCommand}" Margin="0,0,4,0" Padding="12,4" MinWidth="80" />
+            <Button Grid.Column="1" Content="Sửa" Command="{Binding EditCommand}" Margin="4,0" Padding="12,4" MinWidth="80" />
+            <Button Grid.Column="2" Content="Xóa" Command="{Binding DeleteCommand}" Margin="4,0,0,0" Padding="12,4" MinWidth="80" />
+        </Grid>
+
+        <!-- TreeGrid -->
+        <syncfusion:SfTreeGrid Grid.Row="2"
+                               x:Name="MenuTreeGrid"
+                               ItemsSource="{Binding MenuItems}"
+                               ChildPropertyName="Children"
+                               SelectedItem="{Binding SelectedMenu, Mode=TwoWay}"
+                               AutoGenerateColumns="False"
+                               AllowResizingColumns="True"
+                               AllowSorting="False"
+                               ShowRowHeader="False"
+                               ExpanderColumn="TitleColumn">
+            <syncfusion:SfTreeGrid.Columns>
+                <syncfusion:TreeGridTextColumn x:Name="TitleColumn" HeaderText="Tên menu" MappingName="Title" Width="250" />
+                <syncfusion:TreeGridTextColumn HeaderText="ActionKey" MappingName="ActionKey" Width="150" />
+                <syncfusion:TreeGridNumericColumn HeaderText="SortOrder" MappingName="SortOrder" Width="100" TextAlignment="Center" NumberDecimalDigits="0" />
+                <syncfusion:TreeGridTextColumn HeaderText="Icon" MappingName="Glyph" Width="100" />
+                <syncfusion:TreeGridCheckBoxColumn HeaderText="Hiển thị" MappingName="IsEnabled" Width="80" />
+            </syncfusion:SfTreeGrid.Columns>
+        </syncfusion:SfTreeGrid>
+
+        <!-- Busy indicator -->
+        <syncfusion:SfBusyIndicator Grid.Row="2" IsBusy="{Binding IsBusy}" IsHitTestVisible="{Binding IsBusy}" />
+    </Grid>
+</UserControl>

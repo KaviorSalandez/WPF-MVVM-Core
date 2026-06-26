@@ -22,6 +22,12 @@ public interface INavigationService
 
     /// <summary>Quay lại trang trước.</summary>
     void NavigateBack();
+
+    /// <summary>Lấy lịch sử điều hướng hiện tại (từ gốc đến trang hiện tại).</summary>
+    IEnumerable<object> History { get; }
+
+    /// <summary>Xóa lịch sử điều hướng. Dùng khi chuyển sang một root menu mới.</summary>
+    void ClearHistory();
 }
 
 /// <summary>Event payload khi <see cref="INavigationService.Navigated"/> được raise.</summary>

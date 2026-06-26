@@ -1,4 +1,4 @@
-namespace WPFCore.App.Shell.Menu;
+namespace WPFCore.App.Modules.Menus.Models;
 
 /// <summary>
 /// Node của cây menu dùng để binding ra UI. Khác với <see cref="MenuItemEntity"/> (bản ghi phẳng
@@ -11,6 +11,8 @@ namespace WPFCore.App.Shell.Menu;
 /// </remarks>
 public sealed class MenuNode
 {
+    public int Id { get; init; }
+
     /// <summary>Tiêu đề hiển thị.</summary>
     public string Title { get; init; } = string.Empty;
 
@@ -22,6 +24,8 @@ public sealed class MenuNode
 
     /// <summary>Mục có đang được phép bấm hay không.</summary>
     public bool IsEnabled { get; init; } = true;
+
+    public int SortOrder { get; init; }
 
     /// <summary>Danh sách mục con (rỗng nếu là mục lá).</summary>
     public IReadOnlyList<MenuNode> Children { get; init; } = Array.Empty<MenuNode>();

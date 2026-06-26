@@ -44,7 +44,7 @@ public sealed partial class CustomerListViewModel : ViewModelBase
         _dialog = dialog;
         _logger = logger;
         _mapper = mapper;
-        Title = "Khách hàng";
+        Title = "Quản lý khách hàng";
     }
 
     [RelayCommand]

@@ -1,7 +1,9 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using WPFCore.App.Shell.Menu;
+using WPFCore.App.Modules.Menus.Models;
+using WPFCore.App.Modules.Menus.Repositories;
+using WPFCore.App.Modules.Menus.Services;
 using WPFCore.Tests.Shared;
 
 namespace WPFCore.Tests.Shell;
@@ -14,7 +16,7 @@ public sealed class MenuServiceTests : TestBase
         repo = CreateMock<IMenuRepository>();
         repo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(rows);
-        return new MenuService(repo.Object, CreateLogger<MenuService>());
+        return new MenuService(repo.Object, new MenuMapper(), CreateLogger<MenuService>());
     }
 
     [Test]

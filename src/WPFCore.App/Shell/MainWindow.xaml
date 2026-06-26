@@ -100,6 +100,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" /> <!-- Breadcrumb -->
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -110,11 +111,36 @@
               ItemsSource="{Binding MenuItems}"
               ItemContainerStyle="{StaticResource MenuNodeContainerStyle}" />
 
+        <!-- ── Breadcrumb ──────── -->
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Breadcrumbs}" Margin="12,6,12,0">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <!-- Nút bấm chứa tên trang -->
+                        <Button Content="{Binding Title}" 
+                                Command="{Binding NavigateCommand}" 
+                                Background="Transparent" 
+                                BorderThickness="0" 
+                                Foreground="#005FB8" 
+                                Cursor="Hand" 
+                                Padding="2,0"/>
+                        <!-- Mũi tên ngăn cách, bị ẩn ở item cuối cùng bằng trigger nếu cần, tạm thời để luôn hiện hoặc thêm trigger -->
+                        <TextBlock Text=" ❯ " Foreground="Gray" VerticalAlignment="Center" Margin="5,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <!-- Navigation host (ContentControl được thay bằng Frame trong code-behind) -->
-        <ContentControl Grid.Row="1" x:Name="NavigationHost" />
+        <ContentControl Grid.Row="2" x:Name="NavigationHost" />
 
         <!-- Status bar -->
-        <Border Grid.Row="2" Background="#FFF0F0F0" BorderBrush="#FFE0E0E0" BorderThickness="0,1,0,0" Padding="12,4">
+        <Border Grid.Row="3" Background="#FFF0F0F0" BorderBrush="#FFE0E0E0" BorderThickness="0,1,0,0" Padding="12,4">
             <TextBlock Text="Sẵn sàng" FontSize="12" Foreground="#FF606060" />
         </Border>
     </Grid>

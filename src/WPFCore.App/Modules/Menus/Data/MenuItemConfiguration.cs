@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WPFCore.App.Modules.Menus.Models;
 
-namespace WPFCore.App.Shell.Menu.Data;
+namespace WPFCore.App.Modules.Menus.Data;
 
 /// <summary>
 /// Cấu hình EF Core cho bảng <c>menu_items</c> + seed dữ liệu menu mặc định.
@@ -62,6 +63,7 @@ public sealed class MenuItemConfiguration : IEntityTypeConfiguration<MenuItemEnt
             new MenuItemEntity { Id = 23, ParentId = 20, Title = "Báo cáo tổng hợp", ActionKey = "SummaryReport", SortOrder = 3 },
             new MenuItemEntity { Id = 24, ParentId = 20, Title = "Xuất báo cáo (Excel/PDF)", ActionKey = "ExportReport", SortOrder = 4 },
             new MenuItemEntity { Id = 25, ParentId = 20, Title = "Quản lý khách hàng (CRUD mẫu)", ActionKey = "CustomerList", SortOrder = 5 },
+            new MenuItemEntity { Id = 26, ParentId = 20, Title = "Quản lý menu", ActionKey = "Menus", SortOrder = 6 },
 
             // Trợ giúp (nhóm cha)
             new MenuItemEntity { Id = 30, ParentId = null, Title = "Trợ giúp", ActionKey = null, SortOrder = 4 },

@@ -1,4 +1,4 @@
-namespace WPFCore.App.Shell.Menu;
+namespace WPFCore.App.Modules.Menus.Models;
 
 /// <summary>
 /// Một bản ghi menu trong cơ sở dữ liệu (bảng <c>menu_items</c>).

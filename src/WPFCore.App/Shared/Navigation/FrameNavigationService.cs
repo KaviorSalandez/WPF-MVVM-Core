@@ -25,6 +25,21 @@ public sealed class FrameNavigationService : INavigationService
 
     public event EventHandler<NavigationEventArgs>? Navigated;
 
+    public IEnumerable<object> History => _history.Reverse();
+
+    public void ClearHistory()
+    {
+        _history.Clear();
+        // Cần xóa NavigationService journal của Frame nếu muốn tránh user nhấn Alt+Left để quay lại sau khi clear.
+        if (_frame != null)
+        {
+            while (_frame.CanGoBack)
+            {
+                _frame.RemoveBackEntry();
+            }
+        }
+    }
+
     /// <summary>Đăng ký Frame từ MainWindow (gọi trong code-behind MainWindow sau InitializeComponent).</summary>
     public void Attach(Frame frame)
     {
