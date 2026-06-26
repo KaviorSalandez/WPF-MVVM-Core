@@ -29,5 +29,9 @@ public partial class MainWindow : Window
         NavigationHost.Content = frame;
 
         _navigation.Attach(frame);
+
+        // Nạp menu động từ DB sau khi cửa sổ đã hiện (truy vấn DB ngoài constructor).
+        // InitializeAsync tự bắt và log lỗi, nên async-void event handler ở đây là an toàn.
+        Loaded += async (_, _) => await viewModel.InitializeAsync();
     }
 }

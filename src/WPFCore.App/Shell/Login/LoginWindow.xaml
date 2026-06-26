@@ -81,6 +81,62 @@
             </Setter>
         </Style>
 
+        <!-- TextBox cho ô Tên đăng nhập — template tự vẽ để watermark canh GIỮA (khớp PasswordBox) -->
+        <Style x:Key="LoginTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="CaretBrush" Value="#3B82F6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="OuterBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="#CBD5E1"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                            <Grid>
+                                <!-- Nơi nhập text thật -->
+                                <ScrollViewer x:Name="PART_ContentHost"
+                                              Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="Center"/>
+                                <!-- Watermark: TextBlock canh giữa, ẩn khi đã có text -->
+                                <TextBlock x:Name="Watermark"
+                                           Text="Nhập tên đăng nhập..."
+                                           Margin="{TemplateBinding Padding}"
+                                           VerticalAlignment="Center"
+                                           Foreground="#94A3B8"
+                                           IsHitTestVisible="False"
+                                           Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Rỗng VÀ chưa focus → hiện watermark.
+                                 Khi click vào nhập (focus) thì ẩn để con trỏ không đè lên chữ. -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value="" />
+                                    <Condition Property="IsKeyboardFocused" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Watermark" Property="Visibility" Value="Visible" />
+                            </MultiTrigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="OuterBorder" Property="BorderBrush" Value="#3B82F6"/>
+                                <Setter TargetName="OuterBorder" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="OuterBorder" Property="BorderBrush" Value="#94A3B8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Nút Đăng nhập — gradient xanh nổi bật -->
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
@@ -250,20 +306,28 @@
                     <!-- Tên đăng nhập -->
                     <TextBlock Text="Tên đăng nhập" FontSize="13" FontWeight="SemiBold"
                                Foreground="#374151" Margin="0,0,0,6"/>
-                    <syncfusion:SfTextBoxExt
+                    <TextBox
                         x:Name="UsernameBox"
+                        Style="{StaticResource LoginTextBoxStyle}"
                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                        Watermark="Nhập tên đăng nhập..."
-                        FontSize="14" Height="42"
                         Margin="0,0,0,18"
                         KeyDown="UsernameBox_KeyDown"/>
 
                     <!-- Mật khẩu -->
                     <TextBlock Text="Mật khẩu" FontSize="13" FontWeight="SemiBold"
                                Foreground="#374151" Margin="0,0,0,6"/>
-                    <PasswordBox x:Name="PasswordBox"
-                                 Style="{StaticResource LoginPasswordBoxStyle}"
-                                 Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,6">
+                        <PasswordBox x:Name="PasswordBox"
+                                     Style="{StaticResource LoginPasswordBoxStyle}"/>
+                        <!-- Watermark đè lên PasswordBox; ẩn/hiện điều khiển ở code-behind
+                             (PasswordBox.Password không phải DependencyProperty nên không trigger được). -->
+                        <TextBlock x:Name="PasswordWatermark"
+                                   Text="Nhập mật khẩu..."
+                                   Margin="12,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="#94A3B8"
+                                   IsHitTestVisible="False"/>
+                    </Grid>
 
                     <!-- Thông báo lỗi -->
                     <Border Background="#FEF2F2" CornerRadius="6" Padding="10,8"

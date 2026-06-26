@@ -20,13 +20,35 @@ public partial class LoginWindow : Window
         InitializeComponent();
 
         // Wire password box → ViewModel (PasswordBox.Password không bindable)
-        PasswordBox.PasswordChanged += (_, _) => _viewModel.SetPassword(PasswordBox.Password);
+        PasswordBox.PasswordChanged += (_, _) =>
+        {
+            _viewModel.SetPassword(PasswordBox.Password);
+            UpdatePasswordWatermark();
+        };
+
+        // Cập nhật watermark khi focus đổi (ẩn khi đang nhập, hiện lại khi rời đi mà còn trống)
+        PasswordBox.GotKeyboardFocus += (_, _) => UpdatePasswordWatermark();
+        PasswordBox.LostKeyboardFocus += (_, _) => UpdatePasswordWatermark();
 
         // Wire Enter key trong PasswordBox → kích hoạt LoginCommand
         PasswordBox.KeyDown += PasswordBox_KeyDown;
 
         // Khi đăng nhập thành công → close dialog với result = true
         _viewModel.LoginSucceeded += OnLoginSucceeded;
+
+        // Trạng thái ban đầu: ô trống, chưa focus → hiện watermark
+        UpdatePasswordWatermark();
+    }
+
+    /// <summary>
+    /// Hiện watermark mật khẩu khi ô trống VÀ chưa được focus; ẩn khi đang nhập hoặc đã có ký tự.
+    /// </summary>
+    private void UpdatePasswordWatermark()
+    {
+        PasswordWatermark.Visibility =
+            PasswordBox.Password.Length == 0 && !PasswordBox.IsKeyboardFocused
+                ? Visibility.Visible
+                : Visibility.Collapsed;
     }
 
     // ──────────────────────────────────────

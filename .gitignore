@@ -47,3 +47,12 @@ desktop.ini
 publish/
 artifacts/
 *.md
+
+.mcp.json
+.settings.json
+.dotnet-tools.json
+.claude/
+.codegraph/
+.vs/
+.config/
+.gemini/

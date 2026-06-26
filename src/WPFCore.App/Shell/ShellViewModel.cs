@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -6,13 +7,14 @@ using Microsoft.Extensions.Logging;
 using WPFCore.App.Shared.Dialogs;
 using WPFCore.App.Shared.Navigation;
 using WPFCore.App.Shared.ViewModels;
+using WPFCore.App.Shell.Menu;
 
 namespace WPFCore.App.Shell;
 
 /// <summary>
 /// ViewModel chính cho Shell <c>MainWindow</c>. Quản lý <see cref="WindowTitle"/>, danh sách
-/// menu (<see cref="MenuItems"/>) và phản hồi <c>INavigationService.Navigated</c> để cập nhật
-/// <see cref="CurrentView"/> khi người dùng điều hướng giữa các page.
+/// menu động (<see cref="MenuItems"/>) nạp từ cơ sở dữ liệu, và phản hồi
+/// <c>INavigationService.Navigated</c> để cập nhật tiêu đề khi điều hướng.
 /// </summary>
 public sealed partial class ShellViewModel : ViewModelBase
 {
@@ -27,8 +29,11 @@ public sealed partial class ShellViewModel : ViewModelBase
     [ObservableProperty]
     private object? _currentView;
 
-    /// <summary>Danh sách menu tĩnh hiển thị trên thanh menu của MainWindow.</summary>
-    public MenuItemDefinition[] MenuItems { get; } = MenuDefinitions.MainMenu;
+    /// <summary>
+    /// Cây menu được nạp động từ DB. Trống lúc khởi tạo; <see cref="InitializeAsync"/> sẽ đổ dữ liệu.
+    /// Là <see cref="ObservableCollection{T}"/> nên UI tự cập nhật sau khi nạp xong.
+    /// </summary>
+    public ObservableCollection<MenuNode> MenuItems { get; } = new();
 
     public ShellViewModel(
         INavigationService navigation,
@@ -44,74 +49,70 @@ public sealed partial class ShellViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// Command được binding từ menu. Phân luồng: nếu item có <c>NavigateToViewModel</c> thì
-    /// điều hướng, nếu có <c>ActionKey</c> thì gọi <see cref="HandleAction"/>.
+    /// Nạp menu từ DB và đổ vào <see cref="MenuItems"/>. Gọi từ <c>MainWindow.Loaded</c>
+    /// (sau khi cửa sổ đã hiện) để truy vấn DB không chặn lúc khởi tạo.
+    /// </summary>
+    /// <remarks>
+    /// Tạo scope DI riêng để dùng <see cref="IMenuService"/> (Scoped) từ ShellViewModel (Singleton) —
+    /// tránh "captive dependency", giống cách <c>AppStartup</c> tạo scope cho DbContext.
+    /// </remarks>
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            using var scope = _services.CreateScope();
+            var menuService = scope.ServiceProvider.GetRequiredService<IMenuService>();
+            var tree = await menuService.GetMenuTreeAsync(cancellationToken).ConfigureAwait(true);
+
+            MenuItems.Clear();
+            foreach (var node in tree)
+            {
+                MenuItems.Add(node);
+            }
+
+            _logger.LogInformation("Menu loaded from database: {Count} top-level item(s)", MenuItems.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load menu from database");
+            await _dialog.ShowErrorAsync("Lỗi", "Không thể tải menu từ cơ sở dữ liệu.", ex).ConfigureAwait(true);
+        }
+    }
+
+    /// <summary>
+    /// Command bind cho mọi mục menu. Tham số là <see cref="MenuNode"/> đang được bấm.
+    /// Nhóm cha (có mục con) chỉ mở submenu nên bỏ qua; mục lá thì dispatch theo <c>ActionKey</c>.
     /// </summary>
     [RelayCommand]
-    private void Navigate(MenuItemDefinition? menuItem)
+    private void Menu(MenuNode? node)
     {
-        if (menuItem is null) return;
-
-        if (menuItem.NavigateToViewModel is not null)
+        if (node is null || node.HasChildren)
         {
-            try
-            {
-                _navigation.NavigateTo(menuItem.NavigateToViewModel);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to navigate to {Vm}", menuItem.NavigateToViewModel.Name);
-                _ = _dialog.ShowErrorAsync("Lỗi", $"Không thể mở '{menuItem.Title}'.", ex);
-            }
-        }
-        else if (menuItem.ActionKey is not null)
-        {
-            HandleAction(menuItem.ActionKey);
-        }
-    }
-
-    [RelayCommand]
-    private void Action(string actionKey)
-    {
-        if (actionKey == "CustomerList")
-        {
-            _navigation.NavigateTo(typeof(WPFCore.App.Modules.Customers.ViewModels.CustomerListViewModel));
             return;
         }
-        else if (actionKey == "Dashboard")
+
+        if (string.IsNullOrWhiteSpace(node.ActionKey))
         {
-            _navigation.NavigateTo(typeof(WPFCore.App.Modules.Dashboard.ViewModels.DashboardViewModel));
             return;
         }
-        
-        HandleAction(actionKey);
+
+        Dispatch(node.ActionKey);
     }
 
-    private void HandleAction(string actionKey)
+    /// <summary>Phân luồng theo <c>ActionKey</c>: điều hướng tới ViewModel hoặc thực thi hành động.</summary>
+    private void Dispatch(string actionKey)
     {
         switch (actionKey)
         {
-            // ── Danh mục ──────────────────────────────────────────────
-            case "MapLayer":
-            case "GeoFeature":
-            case "DataSource":
-            case "CheckRules":
-            case "MapType":
-            case "Users":
-                _ = _dialog.ShowMessageAsync("Thông báo",
-                    $"Chức năng \"{actionKey}\" đang được phát triển.");
+            // ── Điều hướng tới các màn hình đã có ──────────────────────
+            case "CustomerList":
+                _navigation.NavigateTo(typeof(WPFCore.App.Modules.Customers.ViewModels.CustomerListViewModel));
+                break;
+            case "Dashboard":
+                _navigation.NavigateTo(typeof(WPFCore.App.Modules.Dashboard.ViewModels.DashboardViewModel));
                 break;
 
-            // ── Hệ thống ──────────────────────────────────────────────
-            case "RunCheck":
-            case "CheckResults":
-            case "SummaryReport":
-            case "ExportReport":
-                _ = _dialog.ShowMessageAsync("Thông báo",
-                    $"Chức năng \"{actionKey}\" đang được phát triển.");
-                break;
-
-            // ── Trợ giúp ──────────────────────────────────────────────
+            // ── Trợ giúp ───────────────────────────────────────────────
             case "About":
                 _ = _dialog.ShowMessageAsync(
                     "Giới thiệu",
@@ -119,6 +120,12 @@ public sealed partial class ShellViewModel : ViewModelBase
                 break;
             case "Exit":
                 Application.Current.Shutdown();
+                break;
+
+            // ── Các chức năng chưa phát triển ──────────────────────────
+            default:
+                _ = _dialog.ShowMessageAsync("Thông báo",
+                    $"Chức năng \"{actionKey}\" đang được phát triển.");
                 break;
         }
     }

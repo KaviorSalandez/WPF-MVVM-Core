@@ -1,6 +1,7 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using WPFCore.App.Shell.Login;
+using WPFCore.App.Shell.Menu;
 
 namespace WPFCore.App.Shell;
 
@@ -21,6 +22,10 @@ public static class ShellServiceCollectionExtensions
         services.AddSingleton<ShellViewModel>();
         services.AddTransient<MainWindow>();
         services.AddTransient<Window>(sp => sp.GetRequiredService<MainWindow>());
+
+        // Menu động (đọc từ DB). Repository/Service đăng ký Scoped giống các module khác.
+        services.AddScoped<IMenuRepository, MenuRepository>();
+        services.AddScoped<IMenuService, MenuService>();
 
         // Login
         services.AddTransient<LoginViewModel>();

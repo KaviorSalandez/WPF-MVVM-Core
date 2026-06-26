@@ -12,6 +12,91 @@
         WindowStartupLocation="CenterScreen"
         FontFamily="Segoe UI">
 
+    <Window.Resources>
+        <!--
+            Style áp cho từng <MenuItem> được sinh ra từ dữ liệu (MenuNode).
+            Vì DataContext của mỗi MenuItem là một MenuNode (không phải ShellViewModel), nên:
+              - Header / ItemsSource / IsEnabled bind thẳng vào property của MenuNode.
+              - Command phải "đi ngược" lên ShellViewModel qua RelativeSource (DataContext của Menu).
+              - ItemContainerStyle tự trỏ lại CHÍNH NÓ bằng DynamicResource để áp đệ quy cho mọi cấp con
+                (StaticResource không tự tham chiếu được vì style chưa định nghĩa xong khi parse).
+        -->
+        <Style x:Key="MenuNodeContainerStyle" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Title}" />
+            <Setter Property="ItemsSource" Value="{Binding Children}" />
+            <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+            <Setter Property="Command"
+                    Value="{Binding DataContext.MenuCommand, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource MenuNodeContainerStyle}" />
+
+            <!-- Template tự vẽ: BỎ cột icon (gutter trái) và padding trên của theme,
+                 nên không còn khoảng trắng thừa ở đầu dropdown. -->
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#1F1F1F" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Chữ tiêu đề (không có cột icon phía trước) -->
+                                <ContentPresenter Grid.Column="0"
+                                                  ContentSource="Header"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True" />
+
+                                <!-- Mũi tên ► chỉ hiện ở mục cha trong submenu -->
+                                <Path Grid.Column="1" x:Name="Arrow"
+                                      Margin="12,0,0,0" VerticalAlignment="Center"
+                                      Data="M0,0 L4,4 L0,8 Z" Fill="#666"
+                                      Visibility="Collapsed" />
+
+                                <!-- Popup chứa các mục con; Border padding nhỏ → không trống ở đầu -->
+                                <Popup x:Name="PART_Popup"
+                                       AllowsTransparency="True"
+                                       Focusable="False"
+                                       IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Placement="Bottom"
+                                       PopupAnimation="Fade">
+                                    <Border Background="White"
+                                            BorderBrush="#D0D0D0"
+                                            BorderThickness="1"
+                                            Padding="0,2"
+                                            SnapsToDevicePixels="True">
+                                        <ItemsPresenter />
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Mục cha trong submenu: popup mở sang phải + hiện mũi tên -->
+                            <Trigger Property="Role" Value="SubmenuHeader">
+                                <Setter TargetName="PART_Popup" Property="Placement" Value="Right" />
+                                <Setter TargetName="Arrow" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <!-- Hover -->
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#E8F0FE" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,67 +104,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- ── Menu Bar ─────────────────────────────────────────────────── -->
-        <Menu Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-
-            <!-- THỐNG KÊ -->
-            <MenuItem Header="Thống kê"
-                      Command="{Binding ActionCommand}"
-                      CommandParameter="Dashboard" />
-
-            <!-- DANH MỤC -->
-            <MenuItem Header="Danh mục">
-                <MenuItem Header="Quản lý lớp dữ liệu bản đồ"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="MapLayer" />
-                <MenuItem Header="Quản lý đối tượng địa lý"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="GeoFeature" />
-                <MenuItem Header="Quản lý nguồn dữ liệu"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="DataSource" />
-                <MenuItem Header="Quản lý quy định kiểm tra"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="CheckRules" />
-                <MenuItem Header="Quản lý loại bản đồ"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="MapType" />
-                <MenuItem Header="Quản lý người dùng"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="Users" />
-            </MenuItem>
-
-            <!-- HỆ THỐNG -->
-            <MenuItem Header="Hệ thống">
-                <MenuItem Header="Kiểm tra dữ liệu bản đồ"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="RunCheck" />
-                <MenuItem Header="Xem kết quả kiểm tra"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="CheckResults" />
-                <MenuItem Header="Báo cáo tổng hợp"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="SummaryReport" />
-                <MenuItem Header="Xuất báo cáo (Excel/PDF)"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="ExportReport" />
-                <Separator />
-                <MenuItem Header="Quản lý khách hàng (CRUD mẫu)"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="CustomerList" />
-            </MenuItem>
-
-            <!-- TRỢ GIÚP -->
-            <MenuItem Header="Trợ giúp">
-                <MenuItem Header="Giới thiệu"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="About" />
-                <Separator />
-                <MenuItem Header="Thoát"
-                          Command="{Binding ActionCommand}"
-                          CommandParameter="Exit" />
-            </MenuItem>
-        </Menu>
+        <!-- ── Menu Bar (động, nạp từ DB qua ShellViewModel.MenuItems) ──────── -->
+        <Menu Grid.Row="0"
+              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+              ItemsSource="{Binding MenuItems}"
+              ItemContainerStyle="{StaticResource MenuNodeContainerStyle}" />
 
         <!-- Navigation host (ContentControl được thay bằng Frame trong code-behind) -->
         <ContentControl Grid.Row="1" x:Name="NavigationHost" />
