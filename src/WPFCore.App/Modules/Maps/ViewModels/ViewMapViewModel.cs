@@ -139,9 +139,30 @@ public sealed partial class ViewMapViewModel : ViewModelBase
         {
             if (layer.FullExtent != null)
             {
-                combinedExtent = combinedExtent == null 
-                    ? layer.FullExtent 
-                    : GeometryEngine.CombineExtents(combinedExtent, layer.FullExtent);
+                if (combinedExtent == null)
+                {
+                    combinedExtent = layer.FullExtent;
+                }
+                else
+                {
+                    // Lỗi ArgumentException xảy ra nếu 2 layer khác hệ tọa độ (SpatialReference).
+                    // Cách khắc phục: Project (chuyển đổi hệ tọa độ) layer hiện tại về cùng hệ với combinedExtent
+                    if (layer.FullExtent.SpatialReference != null && 
+                        combinedExtent.SpatialReference != null &&
+                        !layer.FullExtent.SpatialReference.IsEqual(combinedExtent.SpatialReference))
+                    {
+                        var projectedExtent = GeometryEngine.Project(layer.FullExtent, combinedExtent.SpatialReference) as Envelope;
+                        if (projectedExtent != null)
+                        {
+                            combinedExtent = GeometryEngine.CombineExtents(combinedExtent, projectedExtent);
+                        }
+                    }
+                    else
+                    {
+                        // Nếu cùng hệ tọa độ thì gộp bình thường
+                        combinedExtent = GeometryEngine.CombineExtents(combinedExtent, layer.FullExtent);
+                    }
+                }
             }
         }
 
