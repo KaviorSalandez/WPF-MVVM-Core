@@ -158,6 +158,9 @@ public sealed partial class ShellViewModel : ViewModelBase
             case "Menus":
                 _navigation.NavigateTo(typeof(WPFCore.App.Modules.Menus.ViewModels.MenuListViewModel));
                 break;
+            case "ViewMap":
+                _navigation.NavigateTo(typeof(WPFCore.App.Modules.Maps.ViewModels.ViewMapViewModel));
+                break;
 
             // ── Trợ giúp ───────────────────────────────────────────────
             case "About":

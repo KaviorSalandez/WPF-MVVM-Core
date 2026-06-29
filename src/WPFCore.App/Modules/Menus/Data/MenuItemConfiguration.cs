@@ -68,6 +68,11 @@ public sealed class MenuItemConfiguration : IEntityTypeConfiguration<MenuItemEnt
             // Trợ giúp (nhóm cha)
             new MenuItemEntity { Id = 30, ParentId = null, Title = "Trợ giúp", ActionKey = null, SortOrder = 4 },
             new MenuItemEntity { Id = 31, ParentId = 30, Title = "Giới thiệu", ActionKey = "About", SortOrder = 1 },
-            new MenuItemEntity { Id = 32, ParentId = 30, Title = "Thoát", ActionKey = "Exit", SortOrder = 2 });
+            new MenuItemEntity { Id = 32, ParentId = 30, Title = "Thoát", ActionKey = "Exit", SortOrder = 2 },
+
+            new MenuItemEntity { Id = 33, ParentId = null, Title = "Bản đồ địa giới", ActionKey = null, SortOrder = 2 },
+            new MenuItemEntity { Id = 34, ParentId = 33, Title = "Xem bản đồ trực quan", ActionKey = "ViewMap", SortOrder = 1 });
+
+
     }
 }

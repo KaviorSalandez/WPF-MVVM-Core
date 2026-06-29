@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using WPFCore.App.Configuration;
 using WPFCore.App.Data;
 using WPFCore.App.Modules.Customers;
@@ -12,6 +13,7 @@ using WPFCore.App.Shared.Dialogs;
 using WPFCore.App.Shared.Navigation;
 using WPFCore.App.Shared.Themes;
 using WPFCore.App.Shell.Login;
+using Esri.ArcGISRuntime;
 
 namespace WPFCore.App.Bootstrap;
 
@@ -74,6 +76,13 @@ public sealed class AppStartup
     {
         try
         {
+            var config = _services.GetRequiredService<IConfiguration>();
+            var arcGisApiKey = config["ArcGIS:ApiKey"];
+            if (!string.IsNullOrWhiteSpace(arcGisApiKey))
+            {
+                ArcGISRuntimeEnvironment.ApiKey = arcGisApiKey;
+            }
+
             await ApplyMigrationsAsync().ConfigureAwait(false);
             await SeedDevelopmentDataAsync().ConfigureAwait(false);
 

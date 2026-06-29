@@ -10,6 +10,7 @@ using WPFCore.App.Configuration;
 using WPFCore.App.Data;
 using WPFCore.App.Modules.Customers;
 using WPFCore.App.Modules.Dashboard;
+using WPFCore.App.Modules.Maps;
 using WPFCore.App.Modules.Menus;
 using WPFCore.App.Shell;
 using WPFCore.App.Shared.Dialogs;
@@ -94,6 +95,7 @@ public static class ServiceRegistrationExtensions
         services.AddCustomersModule();
         services.AddDashboardModule();
         services.AddMenusModule();
+        services.AddMapsModule();
 
         // Shell (MainWindow, NavigationView)
         services.AddShell();

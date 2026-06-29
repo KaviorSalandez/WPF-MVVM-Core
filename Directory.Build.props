@@ -1,13 +1,13 @@
 <Project>
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>NU1700;NU1903;CS1591</WarningsNotAsErrors>
+    <WarningsNotAsErrors>NU1700;NU1701;NU1903;CS1591</WarningsNotAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;NU1701</NoWarn>
     <Company>WPFCore</Company>
     <Product>WPFCore Desktop Boilerplate</Product>
     <Copyright>Copyright © 2026</Copyright>
