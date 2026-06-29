@@ -26,7 +26,9 @@ public sealed partial class ViewMapViewModel : ViewModelBase
     public ViewMapViewModel()
     {
         Title = "Hiển thị bản đồ";
-        _map = new Map(BasemapStyle.ArcGISStreets);
+        
+        // Khởi tạo bản đồ trống (Offline 100%), không gọi server Esri nên không cần API Key
+        _map = new Map();
     }
 
     [RelayCommand]
