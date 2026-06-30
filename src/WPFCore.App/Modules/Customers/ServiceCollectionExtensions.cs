@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<CustomerListView>();
         services.AddTransient<CustomerEditView>();
 
-        services.AddTransient<CustomerSeedData>();
+        services.AddTransient<WPFCore.App.Data.IModuleSeeder, CustomerSeedData>();
 
         return services;
     }

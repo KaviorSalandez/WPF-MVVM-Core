@@ -34,9 +34,7 @@ namespace WPFCore.App.Bootstrap;
 public sealed class AppStartup
 {
     // Tên type cho Customer module (chưa tồn tại — dùng reflectively để Bootstrap build trước module).
-    private const string CustomerEntityTypeName = "WPFCore.App.Modules.Customers.Models.Customer, WPFCore.App";
     private const string CustomerListViewModelTypeName = "WPFCore.App.Modules.Customers.ViewModels.CustomerListViewModel, WPFCore.App";
-    private const string CustomerSeedDataTypeName = "WPFCore.App.Modules.Customers.Data.CustomerSeedData, WPFCore.App";
 
     private readonly IServiceProvider _services;
     private readonly INavigationService _navigation;
@@ -162,19 +160,10 @@ public sealed class AppStartup
 
     private async Task SeedDevelopmentDataAsync()
     {
-        var appOptions = _services.GetRequiredService<IOptions<AppOptions>>().Value;
+        var appOptions = _services.GetRequiredService<Microsoft.Extensions.Options.IOptions<AppOptions>>().Value;
         if (!appOptions.SeedData.Enabled)
         {
-            _logger.LogInformation("App.SeedData.Enabled=false, skip seeding");
-            return;
-        }
-
-        // Resolve Customer type reflectively — Customer module có thể chưa tồn tại ở wave này
-        var customerType = Type.GetType(CustomerEntityTypeName, throwOnError: false);
-        if (customerType is null)
-        {
-            _logger.LogInformation(
-                "Customer entity chưa được đăng ký (assembly wave). Skip seeding.");
+            _logger.LogInformation("Seed data is disabled in configuration.");
             return;
         }
 
@@ -187,62 +176,22 @@ public sealed class AppStartup
             return;
         }
 
-        if (await HasAnyRecordsAsync(dbContext, customerType).ConfigureAwait(false))
+        var seeders = scope.ServiceProvider.GetServices<WPFCore.App.Data.IModuleSeeder>();
+        foreach (var seeder in seeders)
         {
-            _logger.LogInformation("Database đã có data, skip seeding");
-            return;
+            try
+            {
+                await seeder.SeedAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi chạy Seeder: {SeederType}", seeder.GetType().Name);
+            }
         }
-
-        _logger.LogInformation(
-            "Seeding {Count} sample {Entity}...",
-            appOptions.SeedData.CustomerCount,
-            customerType.Name);
-
-        var seedType = Type.GetType(CustomerSeedDataTypeName, throwOnError: false);
-        if (seedType is null)
-        {
-            _logger.LogWarning(
-                "CustomerSeedData chưa được đăng ký. Skip seeding. " +
-                "Tạo class CustomerSeedData trong module Customers để bật seed.");
-            return;
-        }
-
-        var seedInstance = ActivatorUtilities.CreateInstance(_services, seedType);
-        var seedMethod = seedType.GetMethod("SeedAsync", BindingFlags.Public | BindingFlags.Instance);
-        if (seedMethod is null || seedMethod.GetParameters().Length != 1)
-        {
-            _logger.LogWarning("CustomerSeedData.SeedAsync(int) không tồn tại. Skip seeding.");
-            return;
-        }
-
-        var task = (Task)seedMethod.Invoke(seedInstance, new object[] { appOptions.SeedData.CustomerCount })!;
-        await task.ConfigureAwait(false);
 
         _logger.LogInformation("Seed data completed");
     }
 
-    private static async Task<bool> HasAnyRecordsAsync(DbContext dbContext, Type entityType)
-    {
-        // Lấy table name từ EF Core model metadata (kể cả schema nếu có) — không dùng entityType.Name
-        // vì convention có thể là "Customer" trong code nhưng "customers" trong DB.
-        var entityMetadata = dbContext.Model.FindEntityType(entityType)
-            ?? throw new InvalidOperationException($"Entity type '{entityType.FullName}' chưa được đăng ký trong DbContext model.");
-        var tableName = entityMetadata.GetTableName()
-            ?? throw new InvalidOperationException($"Entity '{entityType.FullName}' chưa được map sang table.");
-
-        // Quote table name để tránh conflict với SQL keywords (SQLite sẽ pass-through).
-        var quotedTableName = tableName.Replace("\"", "\"\"");
-
-        var connection = dbContext.Database.GetDbConnection();
-        if (connection.State != System.Data.ConnectionState.Open)
-        {
-            await connection.OpenAsync().ConfigureAwait(false);
-        }
-        await using var cmd = connection.CreateCommand();
-        cmd.CommandText = $"SELECT CASE WHEN EXISTS (SELECT 1 FROM \"{quotedTableName}\") THEN 1 ELSE 0 END";
-        var result = await cmd.ExecuteScalarAsync().ConfigureAwait(false);
-        return Convert.ToInt32(result) == 1;
-    }
 
     private void NavigateToDefault()
     {
