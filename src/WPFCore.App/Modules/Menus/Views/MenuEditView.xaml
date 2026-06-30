@@ -33,7 +33,7 @@
 
             <!-- Tên menu -->
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Tên menu:*" VerticalAlignment="Center" Margin="0,0,0,12" />
-            <syncfusion:SfTextBoxExt Grid.Row="0" Grid.Column="1" Text="{Binding MenuTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12" />
+            <syncfusion:SfTextBoxExt Grid.Row="0" Grid.Column="1" Text="{Binding MenuTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12" MinHeight="36" VerticalContentAlignment="Center"/>
 
             <!-- ActionKey -->
             <TextBlock Grid.Row="1" Grid.Column="0" Text="ActionKey:" VerticalAlignment="Center" Margin="0,0,0,12" />

@@ -21,4 +21,9 @@ public interface IDialogService
     /// <c>false</c>/<c>null</c> nếu hủy bỏ.
     /// </summary>
     Task<bool?> ShowDialogAsync<TViewModel>(object? parameter = null) where TViewModel : class;
+
+    /// <summary>
+    /// Hiển thị thông báo nổi (Snackbar/Toast) ở góc dưới màn hình, tự động tắt sau khoảng thời gian.
+    /// </summary>
+    Task ShowSnackbarAsync(string message, int durationMs = 3000, CancellationToken cancellationToken = default);
 }
