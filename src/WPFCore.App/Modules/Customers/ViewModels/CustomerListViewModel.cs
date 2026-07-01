@@ -53,6 +53,9 @@ public sealed partial class CustomerListViewModel : ViewModelBase
         try
         {
             IsBusy = true;
+            // Giả lập mạng chậm 1 giây để nhìn rõ vòng quay Loading (vì SQLite ở local chạy quá nhanh, dưới 10ms)
+            await Task.Delay(1000, cancellationToken).ConfigureAwait(true);
+            
             var data = await _service.GetAllAsync(SearchText, cancellationToken).ConfigureAwait(true);
             Customers.Clear();
             int stt = 1;

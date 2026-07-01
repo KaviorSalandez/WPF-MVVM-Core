@@ -45,23 +45,35 @@ public sealed partial class LoginViewModel : ViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanLogin))]
-    private void Login()
+    private async Task LoginAsync()
     {
         HasError = false;
         ErrorMessage = null;
 
-        // Hard-coded credentials — thay bằng DB/service trong production
-        if (Username.Trim().Equals("admin", StringComparison.OrdinalIgnoreCase)
-            && _password == "123123")
+        try
         {
-            _logger.LogInformation("Đăng nhập thành công — người dùng: '{Username}'", Username.Trim());
-            LoginSucceeded?.Invoke(this, EventArgs.Empty);
+            IsBusy = true;
+            
+            // Giả lập delay mạng để test Loading Overlay
+            await Task.Delay(1500).ConfigureAwait(true);
+
+            // Hard-coded credentials — thay bằng DB/service trong production
+            if (Username.Trim().Equals("admin", StringComparison.OrdinalIgnoreCase)
+                && _password == "123123")
+            {
+                _logger.LogInformation("Đăng nhập thành công — người dùng: '{Username}'", Username.Trim());
+                LoginSucceeded?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                HasError = true;
+                ErrorMessage = "Tên đăng nhập hoặc mật khẩu không đúng.";
+                _logger.LogWarning("Đăng nhập thất bại — sai thông tin: '{Username}'", Username.Trim());
+            }
         }
-        else
+        finally
         {
-            _logger.LogWarning("Đăng nhập thất bại — username: '{Username}'", Username.Trim());
-            ErrorMessage = "Tên đăng nhập hoặc mật khẩu không chính xác.";
-            HasError = true;
+            IsBusy = false;
         }
     }
 

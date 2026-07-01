@@ -176,180 +176,183 @@
         </Style>
     </Window.Resources>
 
-    <!-- Outer border: CornerRadius + DropShadow (AllowsTransparency cho phép shadow ra ngoài window) -->
-    <Border CornerRadius="12" Background="White"
-            MouseLeftButtonDown="Border_MouseLeftButtonDown">
-        <Border.Effect>
-            <DropShadowEffect BlurRadius="36" ShadowDepth="0"
-                              Color="#000000" Opacity="0.18"/>
-        </Border.Effect>
+    <!-- SfBusyIndicator bọc bên ngoài cùng để che toàn form khi IsBusy = true -->
+    <syncfusion:SfBusyIndicator IsBusy="{Binding IsBusy}" AnimationType="Cupertino" ViewboxWidth="70" ViewboxHeight="70">
+        <!-- Outer border: CornerRadius + DropShadow (AllowsTransparency cho phép shadow ra ngoài window) -->
+        <Border CornerRadius="12" Background="White"
+                MouseLeftButtonDown="Border_MouseLeftButtonDown">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="36" ShadowDepth="0"
+                                  Color="#000000" Opacity="0.18"/>
+            </Border.Effect>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- ═══════════════════════════════════════
-                 LEFT PANEL — Branding / accent tối
-                 ═══════════════════════════════════════ -->
-            <Border Grid.Column="0" CornerRadius="12,0,0,12" ClipToBounds="True">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#0F172A" Offset="0"/>
-                        <GradientStop Color="#1E3A5F" Offset="0.55"/>
-                        <GradientStop Color="#1D4ED8" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
+                <!-- ═══════════════════════════════════════
+                     LEFT PANEL — Branding / accent tối
+                     ═══════════════════════════════════════ -->
+                <Border Grid.Column="0" CornerRadius="12,0,0,12" ClipToBounds="True">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#0F172A" Offset="0"/>
+                            <GradientStop Color="#1E3A5F" Offset="0.55"/>
+                            <GradientStop Color="#1D4ED8" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
 
-                <Grid>
-                    <!-- Vòng trang trí góc trên-phải -->
-                    <Ellipse Width="200" Height="200"
-                             HorizontalAlignment="Right" VerticalAlignment="Top"
-                             Margin="0,-80,-80,0" Opacity="0.06">
-                        <Ellipse.Fill>
-                            <RadialGradientBrush>
-                                <GradientStop Color="White" Offset="0"/>
-                                <GradientStop Color="Transparent" Offset="1"/>
-                            </RadialGradientBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                    <!-- Vòng trang trí góc dưới-trái -->
-                    <Ellipse Width="160" Height="160"
-                             HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                             Margin="-60,0,0,-60" Opacity="0.05">
-                        <Ellipse.Fill>
-                            <RadialGradientBrush>
-                                <GradientStop Color="White" Offset="0"/>
-                                <GradientStop Color="Transparent" Offset="1"/>
-                            </RadialGradientBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>
+                    <Grid>
+                        <!-- Vòng trang trí góc trên-phải -->
+                        <Ellipse Width="200" Height="200"
+                                 HorizontalAlignment="Right" VerticalAlignment="Top"
+                                 Margin="0,-80,-80,0" Opacity="0.06">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush>
+                                    <GradientStop Color="White" Offset="0"/>
+                                    <GradientStop Color="Transparent" Offset="1"/>
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <!-- Vòng trang trí góc dưới-trái -->
+                        <Ellipse Width="160" Height="160"
+                                 HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                 Margin="-60,0,0,-60" Opacity="0.05">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush>
+                                    <GradientStop Color="White" Offset="0"/>
+                                    <GradientStop Color="Transparent" Offset="1"/>
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
 
-                    <!-- Nội dung branding -->
-                    <StackPanel VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                Margin="32,0">
+                        <!-- Nội dung branding -->
+                        <StackPanel VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Margin="32,0">
 
-                        <!-- Icon ứng dụng -->
-                        <Border Width="70" Height="70" CornerRadius="20"
-                                HorizontalAlignment="Center" Margin="0,0,0,22">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="#3B82F6" Offset="0"/>
-                                    <GradientStop Color="#6366F1" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="18" ShadowDepth="0"
-                                                  Color="#3B82F6" Opacity="0.55"/>
-                            </Border.Effect>
-                            <TextBlock Text="W" FontSize="36" FontWeight="Bold"
-                                       Foreground="White"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
-                        </Border>
+                            <!-- Icon ứng dụng -->
+                            <Border Width="70" Height="70" CornerRadius="20"
+                                    HorizontalAlignment="Center" Margin="0,0,0,22">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#3B82F6" Offset="0"/>
+                                        <GradientStop Color="#6366F1" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" ShadowDepth="0"
+                                                      Color="#3B82F6" Opacity="0.55"/>
+                                </Border.Effect>
+                                <TextBlock Text="W" FontSize="36" FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
 
-                        <TextBlock Text="WPFCore" FontSize="26" FontWeight="Bold"
-                                   Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="WPFCore" FontSize="26" FontWeight="Bold"
+                                       Foreground="White" HorizontalAlignment="Center"/>
 
-                        <TextBlock Text="Desktop Boilerplate" FontSize="13"
-                                   Foreground="#CBD5E1" HorizontalAlignment="Center"
-                                   Margin="0,5,0,0"/>
+                            <TextBlock Text="Desktop Boilerplate" FontSize="13"
+                                       Foreground="#CBD5E1" HorizontalAlignment="Center"
+                                       Margin="0,5,0,0"/>
 
-                        <Rectangle Height="1" Fill="#FFFFFF" Opacity="0.09"
-                                   Margin="0,26,0,26"/>
+                            <Rectangle Height="1" Fill="#FFFFFF" Opacity="0.09"
+                                       Margin="0,26,0,26"/>
 
-                        <TextBlock TextWrapping="Wrap" TextAlignment="Center"
-                                   FontSize="12.5" Foreground="#94A3B8"
-                                   LineHeight="22">
-                            Hệ thống quản lý dữ liệu&#10;khách hàng dành cho&#10;doanh nghiệp
-                        </TextBlock>
-                    </StackPanel>
+                            <TextBlock TextWrapping="Wrap" TextAlignment="Center"
+                                       FontSize="12.5" Foreground="#94A3B8"
+                                       LineHeight="22">
+                                Hệ thống quản lý dữ liệu&#10;khách hàng dành cho&#10;doanh nghiệp
+                            </TextBlock>
+                        </StackPanel>
 
-                    <!-- Phiên bản ở đáy -->
-                    <TextBlock Text="v1.0.0  ·  © 2026 WPFCore Team"
-                               Foreground="#64748B" FontSize="10"
-                               HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                               Margin="0,0,0,18"/>
-                </Grid>
-            </Border>
+                        <!-- Phiên bản ở đáy -->
+                        <TextBlock Text="v1.0.0  ·  © 2026 WPFCore Team"
+                                   Foreground="#64748B" FontSize="10"
+                                   HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                                   Margin="0,0,0,18"/>
+                    </Grid>
+                </Border>
 
-            <!-- ═══════════════════════════════════════
-                 RIGHT PANEL — Form đăng nhập
-                 ═══════════════════════════════════════ -->
-            <Grid Grid.Column="1" Background="#F8FAFC">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="44"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                <!-- ═══════════════════════════════════════
+                     RIGHT PANEL — Form đăng nhập
+                     ═══════════════════════════════════════ -->
+                <Grid Grid.Column="1" Background="#F8FAFC">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="44"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <!-- Top bar: nút đóng -->
-                <Grid Grid.Row="0">
-                    <Button Style="{StaticResource FlatCloseButtonStyle}"
-                            Content="✕" FontSize="12" Foreground="#94A3B8"
-                            HorizontalAlignment="Right" VerticalAlignment="Center"
-                            Margin="0,0,12,0"
-                            Click="CloseButton_Click"/>
-                </Grid>
-
-                <!-- Form content -->
-                <StackPanel Grid.Row="1" VerticalAlignment="Center"
-                            Margin="48,0,48,28">
-
-                    <TextBlock Text="Chào mừng trở lại" FontSize="26" FontWeight="Bold"
-                               Foreground="#0F172A" Margin="0,0,0,5"/>
-                    <TextBlock Text="Vui lòng đăng nhập để tiếp tục sử dụng hệ thống."
-                               FontSize="13" Foreground="#64748B"
-                               TextWrapping="Wrap" Margin="0,0,0,34"/>
-
-                    <!-- Tên đăng nhập -->
-                    <TextBlock Text="Tên đăng nhập" FontSize="13" FontWeight="SemiBold"
-                               Foreground="#374151" Margin="0,0,0,6"/>
-                    <TextBox
-                        x:Name="UsernameBox"
-                        Style="{StaticResource LoginTextBoxStyle}"
-                        Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                        Margin="0,0,0,18"
-                        KeyDown="UsernameBox_KeyDown"/>
-
-                    <!-- Mật khẩu -->
-                    <TextBlock Text="Mật khẩu" FontSize="13" FontWeight="SemiBold"
-                               Foreground="#374151" Margin="0,0,0,6"/>
-                    <Grid Margin="0,0,0,6">
-                        <PasswordBox x:Name="PasswordBox"
-                                     Style="{StaticResource LoginPasswordBoxStyle}"/>
-                        <!-- Watermark đè lên PasswordBox; ẩn/hiện điều khiển ở code-behind
-                             (PasswordBox.Password không phải DependencyProperty nên không trigger được). -->
-                        <TextBlock x:Name="PasswordWatermark"
-                                   Text="Nhập mật khẩu..."
-                                   Margin="12,0"
-                                   VerticalAlignment="Center"
-                                   Foreground="#94A3B8"
-                                   IsHitTestVisible="False"/>
+                    <!-- Top bar: nút đóng -->
+                    <Grid Grid.Row="0">
+                        <Button Style="{StaticResource FlatCloseButtonStyle}"
+                                Content="✕" FontSize="12" Foreground="#94A3B8"
+                                HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Margin="0,0,12,0"
+                                Click="CloseButton_Click"/>
                     </Grid>
 
-                    <!-- Thông báo lỗi -->
-                    <Border Background="#FEF2F2" CornerRadius="6" Padding="10,8"
-                            Margin="0,0,0,14"
-                            Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⚠" Foreground="#EF4444" FontSize="13"
-                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Text="{Binding ErrorMessage}"
-                                       FontSize="12.5" Foreground="#B91C1C"
-                                       VerticalAlignment="Center" TextWrapping="Wrap"/>
-                        </StackPanel>
-                    </Border>
+                    <!-- Form content -->
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center"
+                                Margin="48,0,48,28">
 
-                    <!-- Nút đăng nhập -->
-                    <Button Content="Đăng nhập"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            Command="{Binding LoginCommand}"
-                            Height="44" FontSize="14" FontWeight="SemiBold"
-                            Margin="0,4,0,0"/>
-                </StackPanel>
+                        <TextBlock Text="Chào mừng trở lại" FontSize="26" FontWeight="Bold"
+                                   Foreground="#0F172A" Margin="0,0,0,5"/>
+                        <TextBlock Text="Vui lòng đăng nhập để tiếp tục sử dụng hệ thống."
+                                   FontSize="13" Foreground="#64748B"
+                                   TextWrapping="Wrap" Margin="0,0,0,34"/>
+
+                        <!-- Tên đăng nhập -->
+                        <TextBlock Text="Tên đăng nhập" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="#374151" Margin="0,0,0,6"/>
+                        <TextBox
+                            x:Name="UsernameBox"
+                            Style="{StaticResource LoginTextBoxStyle}"
+                            Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,0,0,18"
+                            KeyDown="UsernameBox_KeyDown"/>
+
+                        <!-- Mật khẩu -->
+                        <TextBlock Text="Mật khẩu" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="#374151" Margin="0,0,0,6"/>
+                        <Grid Margin="0,0,0,6">
+                            <PasswordBox x:Name="PasswordBox"
+                                         Style="{StaticResource LoginPasswordBoxStyle}"/>
+                            <!-- Watermark đè lên PasswordBox; ẩn/hiện điều khiển ở code-behind
+                                 (PasswordBox.Password không phải DependencyProperty nên không trigger được). -->
+                            <TextBlock x:Name="PasswordWatermark"
+                                       Text="Nhập mật khẩu..."
+                                       Margin="12,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="#94A3B8"
+                                       IsHitTestVisible="False"/>
+                        </Grid>
+
+                        <!-- Thông báo lỗi -->
+                        <Border Background="#FEF2F2" CornerRadius="6" Padding="10,8"
+                                Margin="0,0,0,14"
+                                Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⚠" Foreground="#EF4444" FontSize="13"
+                                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="{Binding ErrorMessage}"
+                                           FontSize="12.5" Foreground="#B91C1C"
+                                           VerticalAlignment="Center" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Nút đăng nhập -->
+                        <Button Content="Đăng nhập"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Command="{Binding LoginCommand}"
+                                Height="44" FontSize="14" FontWeight="SemiBold"
+                                Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Grid>
             </Grid>
-        </Grid>
-    </Border>
+        </Border>
+    </syncfusion:SfBusyIndicator>
 </Window>

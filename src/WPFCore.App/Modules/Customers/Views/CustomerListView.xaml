@@ -8,7 +8,9 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:CustomerListViewModel}"
              d:DesignHeight="600" d:DesignWidth="1000">
-    <Grid Margin="12">
+    <!-- SfBusyIndicator bọc ngoài cùng sẽ hiện Loading (spin) mỗi khi thuộc tính IsBusy trong ViewModel = true (Lúc đang gọi DB/API) -->
+    <syncfusion:SfBusyIndicator IsBusy="{Binding IsBusy}" AnimationType="Cupertino" ViewboxWidth="50" ViewboxHeight="50">
+        <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -62,8 +64,6 @@
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
 
-        <!-- Busy indicator -->
-        <syncfusion:SfBusyIndicator Grid.Row="2" IsBusy="{Binding IsBusy}" IsHitTestVisible="{Binding IsBusy}" />
 
         <!-- Pager Bar -->
         <Grid Grid.Row="3" Margin="0,4,0,0">
@@ -95,4 +95,5 @@
             </StackPanel>
         </Grid>
     </Grid>
+    </syncfusion:SfBusyIndicator>
 </UserControl>
