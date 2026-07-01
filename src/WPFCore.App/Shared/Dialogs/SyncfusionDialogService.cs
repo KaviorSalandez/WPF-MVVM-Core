@@ -39,17 +39,6 @@ public sealed class SyncfusionDialogService : IDialogService
         return Task.CompletedTask;
     }
 
-    public Task ShowSnackbarAsync(string message, int durationMs = 3000, CancellationToken cancellationToken = default)
-    {
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            var toast = new ToastWindow(message, durationMs);
-            toast.Show();
-        });
-        
-        return Task.CompletedTask;
-    }
-
     public async Task<bool?> ShowDialogAsync<TViewModel>(object? parameter = null) where TViewModel : class
     {
         var vm = _services.GetRequiredService<TViewModel>();

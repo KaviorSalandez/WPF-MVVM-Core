@@ -146,7 +146,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bd" CornerRadius="8">
+                        <Border x:Name="Bd" CornerRadius="8" TextElement.Foreground="{TemplateBinding Foreground}">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                     <GradientStop Color="#2563EB" Offset="0"/>
@@ -254,14 +254,14 @@
                                    Foreground="White" HorizontalAlignment="Center"/>
 
                         <TextBlock Text="Desktop Boilerplate" FontSize="13"
-                                   Foreground="#64748B" HorizontalAlignment="Center"
+                                   Foreground="#CBD5E1" HorizontalAlignment="Center"
                                    Margin="0,5,0,0"/>
 
                         <Rectangle Height="1" Fill="#FFFFFF" Opacity="0.09"
                                    Margin="0,26,0,26"/>
 
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center"
-                                   FontSize="12.5" Foreground="#475569"
+                                   FontSize="12.5" Foreground="#94A3B8"
                                    LineHeight="22">
                             Hệ thống quản lý dữ liệu&#10;khách hàng dành cho&#10;doanh nghiệp
                         </TextBlock>
@@ -269,7 +269,7 @@
 
                     <!-- Phiên bản ở đáy -->
                     <TextBlock Text="v1.0.0  ·  © 2026 WPFCore Team"
-                               Foreground="#334155" FontSize="10"
+                               Foreground="#64748B" FontSize="10"
                                HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                Margin="0,0,0,18"/>
                 </Grid>

@@ -78,7 +78,7 @@ public sealed partial class MenuListViewModel : ViewModelBase
         if (result == true)
         {
             await LoadAsync(CancellationToken.None).ConfigureAwait(true);
-            await _dialog.ShowSnackbarAsync("Thêm menu thành công!").ConfigureAwait(true);
+            await _dialog.ShowMessageAsync("Thông báo", "Thêm menu thành công!").ConfigureAwait(true);
         }
     }
 
@@ -92,7 +92,7 @@ public sealed partial class MenuListViewModel : ViewModelBase
         if (result == true)
         {
             await LoadAsync(CancellationToken.None).ConfigureAwait(true);
-            await _dialog.ShowSnackbarAsync("Cập nhật menu thành công!").ConfigureAwait(true);
+            await _dialog.ShowMessageAsync("Thông báo", "Cập nhật menu thành công!").ConfigureAwait(true);
         }
     }
 
@@ -103,7 +103,7 @@ public sealed partial class MenuListViewModel : ViewModelBase
 
         if (SelectedMenu.HasChildren)
         {
-            await _dialog.ShowSnackbarAsync("Không thể xóa menu đang có menu con. Vui lòng xóa menu con trước.", durationMs: 4000).ConfigureAwait(true);
+            await _dialog.ShowMessageAsync("Cảnh báo", "Không thể xóa menu đang có menu con. Vui lòng xóa menu con trước.").ConfigureAwait(true);
             return;
         }
 
@@ -115,7 +115,7 @@ public sealed partial class MenuListViewModel : ViewModelBase
                 IsBusy = true;
                 await _service.DeleteAsync(SelectedMenu.Id, CancellationToken.None).ConfigureAwait(true);
                 await LoadAsync(CancellationToken.None).ConfigureAwait(true);
-                await _dialog.ShowSnackbarAsync("Xóa menu thành công!").ConfigureAwait(true);
+                await _dialog.ShowMessageAsync("Thông báo", "Xóa menu thành công!").ConfigureAwait(true);
             }
             catch (Exception ex)
             {

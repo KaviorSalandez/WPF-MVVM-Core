@@ -81,6 +81,7 @@ public sealed partial class CustomerListViewModel : ViewModelBase
         if (result == true)
         {
             await LoadAsync(cancellationToken).ConfigureAwait(true);
+            await _dialog.ShowMessageAsync("Thông báo", "Thêm khách hàng thành công!").ConfigureAwait(true);
         }
     }
 
@@ -92,6 +93,7 @@ public sealed partial class CustomerListViewModel : ViewModelBase
         if (result == true)
         {
             await LoadAsync(cancellationToken).ConfigureAwait(true);
+            await _dialog.ShowMessageAsync("Thông báo", "Cập nhật khách hàng thành công!").ConfigureAwait(true);
         }
     }
 
@@ -110,6 +112,7 @@ public sealed partial class CustomerListViewModel : ViewModelBase
             IsBusy = true;
             await _service.DeleteAsync(SelectedCustomer.Id, cancellationToken).ConfigureAwait(true);
             await LoadAsync(cancellationToken).ConfigureAwait(true);
+            await _dialog.ShowMessageAsync("Thông báo", "Xóa khách hàng thành công!").ConfigureAwait(true);
         }
         catch (Exception ex)
         {

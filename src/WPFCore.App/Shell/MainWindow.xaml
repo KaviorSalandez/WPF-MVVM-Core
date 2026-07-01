@@ -141,7 +141,7 @@
 
         <!-- Status bar -->
         <Border Grid.Row="3" Background="#FFF0F0F0" BorderBrush="#FFE0E0E0" BorderThickness="0,1,0,0" Padding="12,4">
-            <TextBlock Text="Kavior - Sẵn sàng" FontSize="12" Foreground="#FF606060" />
+            <TextBlock Text="WPF Core Application - Sẵn sàng" FontSize="12" Foreground="#FF606060" />
         </Border>
     </Grid>
 </Window>
